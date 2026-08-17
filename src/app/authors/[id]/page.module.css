@@ -1,0 +1,7 @@
+.page {
+  box-sizing: border-box;
+  min-height: 100%;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  padding-block: 32px 64px;
+}

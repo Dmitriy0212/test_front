@@ -1,0 +1,67 @@
+.imageBlock {
+    max-width: 360px;
+}
+
+.uploadLabel {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 335 / 222;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #9f9f9f;
+    transition: opacity 0.2s ease;
+}
+
+.uploadLabel:hover {
+    opacity: 0.9;
+}
+
+.placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 162px;
+    height: 136px;
+    display: block;
+    flex-shrink: 0;
+}
+
+.previewImage {
+    object-fit: cover;
+}
+
+.hiddenInput {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.error {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.2;
+    color: #E53935;
+}
+
+@media (min-width: 1440px) {
+    .imageBlock {
+            max-width: 390px;
+        }
+}
+
+

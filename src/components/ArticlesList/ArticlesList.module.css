@@ -1,0 +1,32 @@
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  min-width: 0;
+  scroll-margin-top: 24px;
+}
+
+.empty {
+  margin: 40px 0;
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

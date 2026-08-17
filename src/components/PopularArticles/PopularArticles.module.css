@@ -1,0 +1,128 @@
+.section {
+  scroll-margin-top: 24px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.container {
+  max-width: 393px;
+  margin-bottom: 72px;
+  padding: 0;
+}
+
+.headingRow {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.375;
+}
+
+.allArticlesLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 28px;
+  gap: 12px;
+  padding-bottom: 4px;
+  color: #374f42;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+.allArticlesLink > span:first-child {
+  min-width: 0;
+}
+
+.linkIcon {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+
+.linkIcon svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+.allArticlesLink:hover,
+.allArticlesLink:focus-visible {
+  color: #649179;
+}
+
+.allArticlesLink:focus-visible {
+  outline: 2px solid rgb(100 145 121 / 25%);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.loader {
+  display: grid;
+  min-height: 492px;
+  place-items: center;
+}
+
+.error {
+  margin: 40px 0;
+  color: var(--color-error);
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: var(--container-width-tablet);
+  }
+
+  .headingRow {
+    align-items: baseline;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .title {
+    font-size: 40px;
+    line-height: 1.375;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .container {
+    max-width: var(--container-width-desktop);
+  }
+
+  .headingRow {
+    align-items: center;
+    gap: 16px;
+  }
+
+  .allArticlesLink {
+    flex: 0 0 160px;
+    min-width: 160px;
+    max-width: 160px;
+    gap: 12px;
+    white-space: nowrap;
+  }
+
+  .listWrapper li:nth-child(n + 4) {
+    display: none;
+  }
+}

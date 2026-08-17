@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.title {
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  text-align: center;
+  color: #070721;
+}
+
+.message {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  text-align: center;
+  color: #070721;
+}
+.containerButtons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+.buttonCancel {
+  border: 1px solid #070721;
+  border-radius: 64px;
+  padding: 12px 16px;
+  width: 164px;
+  height: 46px;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #070721;
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+.buttonLogout {
+  border-radius: 64px;
+  padding: 12px 16px;
+  width: 164px;
+  height: 46px;
+  background: #649179;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #f7fffb;
+  transition:
+    background-color 250ms ease,
+    color 250ms ease;
+}
+.buttonLogout:hover {
+  background: #374f42;
+}
+.buttonCancel:hover {
+  background: #f7fffb;
+}

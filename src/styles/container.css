@@ -1,0 +1,30 @@
+/* Styles for Mobile devices (fluid, 320px+) */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--container-padding-mobile);
+}
+
+/* Styles for Mobile devices (adaptive) */
+@media only screen and (min-width: 375px) {
+  .container {
+    max-width: var(--container-width-mobile);
+  }
+}
+
+/* Styles for Tablet devices */
+@media only screen and (min-width: 768px) {
+  .container {
+    max-width: var(--container-width-tablet);
+    padding: 0 var(--container-padding-tablet);
+  }
+}
+
+/* Styles for Desktop devices */
+@media only screen and (min-width: 1440px) {
+  .container {
+    max-width: var(--container-width-desktop);
+    padding: 0 var(--container-padding-desktop);
+  }
+}

@@ -1,0 +1,123 @@
+.card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 361px;
+  height: 492px;
+  margin-inline: auto;
+  padding: 12px;
+  overflow: hidden;
+  color: #070721;
+  background-color: #d1e0d8;
+  border-radius: 32px;
+}
+
+.imageWrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  height: 233px;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.content {
+  width: 100%;
+  min-width: 0;
+}
+
+.author {
+  height: 22px;
+  margin: 0;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  display: -webkit-box;
+  width: min(264px, 100%);
+  height: 70px;
+  margin: 0;
+  overflow: hidden;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: normal;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.description {
+  display: -webkit-box;
+  height: 50px;
+  margin: 0;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.learnMore {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px;
+  color: #374f42;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #374f42;
+  border-radius: 64px;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.learnMore:hover,
+.learnMore:focus-visible {
+  color: #f7fffb;
+  background-color: #374f42;
+}
+
+.learnMore:focus-visible {
+  outline: 2px solid rgb(55 79 66 / 25%);
+  outline-offset: 2px;
+}
+
+@media screen and (min-width: 768px) {
+  .card {
+    max-width: 340px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .card {
+    max-width: 392px;
+  }
+}

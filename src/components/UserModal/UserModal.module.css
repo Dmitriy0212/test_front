@@ -1,0 +1,197 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(7, 7, 33, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.container {
+  position: relative;
+  background-color: #d1e0d8;
+  border-radius: 32px;
+  padding: 48px 32px;
+  width: 392px;
+  min-height: 354px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.containerHasPhoto {
+  min-height: 378px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  transition: opacity 200ms ease;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.title {
+  font-family: var(--font-family, "Manrope", sans-serif);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.1;
+  text-align: center;
+  color: #070707;
+  margin: 0 0 20px 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.fileInput {
+  display: none;
+}
+
+.emptyAvatarCircle {
+  width: 136px;
+  height: 136px;
+  border-radius: 128px;
+  background: #649179;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 0 auto 24px auto;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.emptyAvatarCircle:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
+}
+
+.filledAvatarWrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto 24px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatarImg {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.editOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.85;
+  transition: opacity 200ms ease;
+}
+
+.filledAvatarWrapper:hover .editOverlay {
+  opacity: 1;
+}
+
+.inputWrapper {
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameInput {
+  width: 100%;
+  height: 48px;
+  padding: 12px 16px;
+  border: 1px solid rgba(7, 7, 33, 0.2);
+  border-radius: 12px;
+  font-family: var(--font-family, "Manrope", sans-serif);
+  font-size: 16px;
+  color: #070707;
+  outline: none;
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: border-color 200ms ease;
+}
+
+.nameInput:focus {
+  border-color: #649179;
+}
+
+.inputError {
+  border-color: #e74c3c !important;
+}
+
+.errorMessage {
+  font-family: var(--font-family, "Manrope", sans-serif);
+  font-size: 12px;
+  color: #e74c3c;
+  margin-top: 6px;
+}
+
+.saveButton {
+  width: 328px;
+  height: 38px;
+  border-radius: 64px;
+  padding: 8px;
+  font-family: var(--font-family, "Manrope", sans-serif);
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #649179;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 200ms ease;
+  box-sizing: border-box;
+}
+
+.saveButton:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.saveButtonDisabled {
+  box-shadow: 0 0 0 6px rgba(78, 70, 180, 0.12), 0 0 0 2px #ffffff;
+  background-color: #649179;
+  opacity: 0.3;
+  cursor: not-allowed;
+}
