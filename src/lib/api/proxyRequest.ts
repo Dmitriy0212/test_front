@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Сервер-only: NEXT_PUBLIC_ інлайнило б це в клієнтський бандл
-const BACKEND_URL = process.env.API_URL;
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function proxyRequest(request: NextRequest, backendPath: string) {
   try {

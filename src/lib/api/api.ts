@@ -8,7 +8,7 @@ import axios from "axios";
 // а префікс NEXT_PUBLIC_ інлайнить значення в клієнтський бандл — це б
 // злило адресу бекенду в браузер і звело нанівець сенс BFF-проксі
 const client = axios.create({
-  baseURL: `${process.env.API_URL}/api`,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
   // withCredentials тут ні на що не впливає — це серверний інстанс, у Node
   // немає браузерного cookie-jar, cookie й так передаються вручну через
   // authHeaders() у serverApi.ts/proxyRequest.ts
