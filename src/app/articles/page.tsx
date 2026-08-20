@@ -1,6 +1,6 @@
 "use client";
 
-import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ComponentType } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ArticleFilter, { type ArticlesFilterValue } from "@/components/ArticleFilter/ArticleFilter";
@@ -36,16 +36,6 @@ type ModalErrorSaveIntegrationProps = {
 };
 
 const IntegratedModalErrorSave = ModalErrorSave as ComponentType<ModalErrorSaveIntegrationProps>;
-
-function getUniqueArticles(pages: ArticlesPageResponse[]): Article[] {
-  const articlesById = new Map<string, Article>();
-
-  pages.forEach((page) => {
-    page.articles.forEach((article) => articlesById.set(article._id, article));
-  });
-
-  return [...articlesById.values()];
-}
 
 async function fetchArticlesPage(
   page: number,
@@ -87,11 +77,12 @@ async function fetchArticlesPage(
 
 export default function ArticlesPage() {
   const [filter, setFilter] = useState<ArticlesFilterValue>("popular");
+  const [page, setPage] = useState(1);
   const [savedArticleIdsOverride, setSavedArticleIdsOverride] =
     useState<SavedArticleIdsOverride | null>(null);
-  const [scrollTargetId, setScrollTargetId] = useState<string | null>(null);
   const [isErrorSaveOpen, setIsErrorSaveOpen] = useState(false);
-  const firstNewArticleRef = useRef<HTMLLIElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const pendingScrollPageRef = useRef<number | null>(null);
   const userId = useAuthStore((state) => state.user?.id);
 
   const { data: savedArticles } = useQuery({
@@ -100,35 +91,16 @@ export default function ArticlesPage() {
     enabled: Boolean(userId),
   });
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isError,
-    isFetching,
-    isFetchingNextPage,
-    isPending,
-    isPlaceholderData,
-  } = useInfiniteQuery({
-    queryKey: ["articles", filter],
-    queryFn: ({ pageParam }) => fetchArticlesPage(pageParam, filter),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) =>
-      lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
+  const { data, error, isError, isFetching, isPending, isPlaceholderData } = useQuery({
+    queryKey: ["articles", filter, page],
+    queryFn: () => fetchArticlesPage(page, filter),
     placeholderData: keepPreviousData,
   });
 
-  const articles = useMemo(() => getUniqueArticles(data?.pages ?? []), [data?.pages]);
-  const authorNames = useMemo(
-    () =>
-      data?.pages.reduce<Record<string, string>>(
-        (names, page) => Object.assign(names, page.authorNames),
-        {},
-      ) ?? {},
-    [data?.pages],
-  );
-  const totalArticles = data?.pages[0]?.totalItems ?? 0;
+  const articles: Article[] = data?.articles ?? [];
+  const authorNames = data?.authorNames ?? {};
+  const totalArticles = data?.totalItems ?? 0;
+  const totalPages = data?.totalPages ?? 0;
   const isArticlesCountLoading = isPending || isPlaceholderData;
   const savedArticleIds = useMemo(() => {
     if (!userId) {
@@ -142,47 +114,44 @@ export default function ArticlesPage() {
     return savedArticles?.map((article) => article._id) ?? [];
   }, [savedArticleIdsOverride, savedArticles, userId]);
 
+  // Scroll only once the requested page's data has actually landed (not while
+  // `isFetching`), otherwise scrollIntoView targets a scroll height computed
+  // from the still-old (usually longer) list and can undershoot after the
+  // shorter page renders in.
   useEffect(() => {
-    if (!scrollTargetId || !firstNewArticleRef.current) {
+    if (pendingScrollPageRef.current === null || pendingScrollPageRef.current !== page) {
       return;
     }
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isFetching) {
+      return;
+    }
 
-    firstNewArticleRef.current.scrollIntoView({
+    pendingScrollPageRef.current = null;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    sectionRef.current?.scrollIntoView({
       behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start",
     });
-    setScrollTargetId(null);
-  }, [scrollTargetId]);
+  }, [page, isFetching]);
 
   const handleFilterChange = (nextFilter: ArticlesFilterValue) => {
     if (nextFilter === filter) {
       return;
     }
 
-    setScrollTargetId(null);
     setFilter(nextFilter);
+    setPage(1);
   };
 
-  const handleLoadMore = async () => {
-    if (!hasNextPage || isFetchingNextPage) {
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage === page) {
       return;
     }
 
-    const previousArticleIds = new Set(articles.map((article) => article._id));
-    const result = await fetchNextPage();
-
-    if (result.isError) {
-      return;
-    }
-
-    const updatedArticles = getUniqueArticles(result.data?.pages ?? []);
-    const firstNewArticle = updatedArticles.find((article) => !previousArticleIds.has(article._id));
-
-    if (firstNewArticle) {
-      setScrollTargetId(firstNewArticle._id);
-    }
+    pendingScrollPageRef.current = nextPage;
+    setPage(nextPage);
   };
 
   const handleGuestSaveAttempt = () => setIsErrorSaveOpen(true);
@@ -199,6 +168,7 @@ export default function ArticlesPage() {
   return (
     <div className={css.page}>
       <section
+        ref={sectionRef}
         className={`container ${css.container}`}
         aria-labelledby="articles-title"
         aria-busy={isFetching}
@@ -212,11 +182,7 @@ export default function ArticlesPage() {
             {isArticlesCountLoading ? null : `${totalArticles} articles`}
           </p>
 
-          <ArticleFilter
-            value={filter}
-            disabled={isFetching && !isFetchingNextPage}
-            onChange={handleFilterChange}
-          />
+          <ArticleFilter value={filter} disabled={isFetching} onChange={handleFilterChange} />
         </div>
 
         {isPending && (
@@ -243,14 +209,12 @@ export default function ArticlesPage() {
                   savedArticleIds={savedArticleIds}
                   onGuestClick={handleGuestSaveAttempt}
                   onSavedArticlesChange={handleSavedArticlesChange}
-                  scrollTargetId={scrollTargetId}
-                  scrollTargetRef={firstNewArticleRef}
                 />
 
                 <Pagination
-                  hasMore={!isPlaceholderData && Boolean(hasNextPage)}
-                  isLoading={isFetchingNextPage}
-                  onLoadMore={handleLoadMore}
+                  pageCount={totalPages}
+                  currentPage={page}
+                  onPageChange={handlePageChange}
                 />
               </>
             )}

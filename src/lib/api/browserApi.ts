@@ -3,6 +3,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 const browserApi = axios.create({
   baseURL: "/api",
   withCredentials: true,
+  timeout: 10_000,
 });
 
 type RetryConfig = InternalAxiosRequestConfig & {
@@ -29,6 +30,7 @@ const refreshSession = async (): Promise<boolean> => {
       {},
       {
         withCredentials: true,
+        timeout: 10_000,
       },
     )
     .then((response) => {

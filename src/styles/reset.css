@@ -1,12 +1,5 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+/* box-sizing: border-box вже задає modern-normalize.css (імпортується
+   раніше в layout.tsx) — дублювати тут нема сенсу */
 
 h1,
 h2,

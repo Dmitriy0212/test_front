@@ -89,3 +89,7 @@ export async function getCategories(): Promise<Category[]> {
 export async function refreshSession() {
   return api.post("/auth/refresh", null, { headers: await authHeaders() });
 }
+
+export async function logoutServer() {
+  return api.post("/auth/logout", null, { headers: await authHeaders() });
+}

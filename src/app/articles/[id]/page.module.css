@@ -49,6 +49,8 @@
 
 .articleText p {
     margin: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .sidebarWrapper {
@@ -144,6 +146,7 @@
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    overflow-wrap: anywhere;
 
     font-family: var(--font-family-base);
     font-size: 16px;
@@ -273,7 +276,7 @@
         flex-shrink: 0;
         color: #000000;
     }
-    
+
 .sidebarWrapper {
     width: 393px;
     flex-shrink: 0;

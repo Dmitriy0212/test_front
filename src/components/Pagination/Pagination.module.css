@@ -1,40 +1,76 @@
-.button {
-  display: block;
-  width: 100%;
-  height: 57px;
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin: 24px auto 0;
-  padding: 16px;
-  color: var(--color-bg, #f7fffb);
+  padding: 0;
+  list-style: none;
+}
+
+.pageItem {
+  display: flex;
+}
+
+.pageLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  color: var(--articles-accent, #649179);
   font: inherit;
-  font-size: 18px;
-  font-weight: 700;
-  background-color: var(--articles-accent, #649179);
-  border: 1px solid var(--articles-accent, #649179);
-  border-radius: 64px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
   cursor: pointer;
   transition:
     background-color 160ms ease,
-    border-color 160ms ease;
+    border-color 160ms ease,
+    color 160ms ease;
 }
 
-.button:hover,
-.button:focus-visible {
-  background-color: var(--articles-accent-hover, #527c66);
-  border-color: var(--articles-accent-hover, #527c66);
+.pageLink:hover,
+.pageLink:focus-visible {
+  background-color: color-mix(in srgb, var(--articles-accent, #649179) 12%, transparent);
+  outline: none;
 }
 
-.button:focus-visible {
+.pageLink:focus-visible {
   outline: 2px solid rgb(100 145 121 / 25%);
   outline-offset: 2px;
 }
 
-.button:disabled {
-  cursor: wait;
-  opacity: 0.7;
+.active .pageLink {
+  color: var(--color-bg, #f7fffb);
+  background-color: var(--articles-accent, #649179);
+  border-color: var(--articles-accent, #649179);
 }
 
-@media screen and (min-width: 768px) {
-  .button {
-    max-width: 390px;
+.active .pageLink:hover,
+.active .pageLink:focus-visible {
+  background-color: var(--articles-accent-hover, #527c66);
+  border-color: var(--articles-accent-hover, #527c66);
+}
+
+.disabled .pageLink {
+  color: var(--pagination-disabled, #a9b3ae);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 480px) {
+  .pagination {
+    gap: 4px;
+  }
+
+  .pageLink {
+    min-width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 }

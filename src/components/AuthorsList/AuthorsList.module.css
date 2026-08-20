@@ -1,0 +1,30 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 16px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+.content {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.title {
+  margin-bottom: 16px;
+}
+
+@media only screen and (min-width: 768px) {
+  .list {
+    gap: 40px 24px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .list {
+    gap: 48px 24px;
+  }
+}

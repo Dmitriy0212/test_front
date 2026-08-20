@@ -1,5 +1,9 @@
 .section {
-  padding: 24px 16px 72px;
+  /* горизонтальний відступ уже дає батьківський .container в page.tsx —
+     власний padding тут його дублював (FE: Top Creators мав більший
+     відступ від краю, ніж Popular Articles). Тільки нижній марджин,
+     як у PopularArticles.module.css */
+  margin-bottom: 72px;
   color: var(--color-text);
   background-color: var(--color-bg);
 }
@@ -110,10 +114,6 @@
 }
 
 @media screen and (min-width: 768px) {
-  .section {
-    padding: 32px 24px 72px;
-  }
-
   .title {
     font-size: 28px;
   }
@@ -139,10 +139,6 @@
 }
 
 @media screen and (min-width: 1440px) {
-  .section {
-    padding: 40px 32px 72px;
-  }
-
   .title {
     font-size: 40px;
   }

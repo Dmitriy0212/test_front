@@ -122,9 +122,9 @@
 
 .btnSecondary:hover,
 .btnSecondary:focus {
- background-color: #f7fffb;
- border: 1px solid #f7fffb;
- color: #070721;
+  background-color: #f7fffb;
+  border: 1px solid #649179;
+  color: #070721;
 }
 
 .btnSecondary:active {

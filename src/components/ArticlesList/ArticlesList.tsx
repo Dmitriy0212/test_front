@@ -9,13 +9,8 @@ interface ArticlesListProps {
   savedArticleIds: string[];
   onGuestClick: () => void;
   onSavedArticlesChange: (savedArticleIds: string[]) => void;
-  scrollTargetId: string | null;
-  scrollTargetRef: Ref<HTMLLIElement>;
-  // Опціонально: дозволяє викликачу підмінити стандартну кнопку закладки
-  // (ButtonAddToBookmarks) на щось інше per-article — наприклад,
-  // EditArticleButton на /profile у табі "My Articles". ArticlesItem вже
-  // підтримує проп action; якщо не передати renderAction, поведінка
-  // лишається такою ж, як і раніше (bookmark-кнопка за замовчуванням).
+  scrollTargetId?: string | null;
+  scrollTargetRef?: Ref<HTMLLIElement>;
   renderAction?: (article: Article) => ReactNode;
 }
 
@@ -25,7 +20,7 @@ export default function ArticlesList({
   savedArticleIds,
   onGuestClick,
   onSavedArticlesChange,
-  scrollTargetId,
+  scrollTargetId = null,
   scrollTargetRef,
   renderAction,
 }: ArticlesListProps) {

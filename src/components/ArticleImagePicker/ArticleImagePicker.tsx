@@ -56,8 +56,7 @@ export const ArticleImagePicker = ({
           <Image
             src={imageSrc}
             alt="Preview"
-            width={300}
-            height={300}
+            fill
             className={css.previewImage}
           />
         ) : (

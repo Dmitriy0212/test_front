@@ -48,6 +48,11 @@ export async function updateAvatar(file: File): Promise<{ avatarUrl: string }> {
   return data.data;
 }
 
+export async function deleteAvatar(): Promise<{ avatarUrl: string }> {
+  const { data } = await api.delete<{ data: { avatarUrl: string } }>("/users/me/avatar");
+  return data.data;
+}
+
 export type GetUsersResponse = {
   page: number;
   perPage: number;
@@ -180,14 +185,6 @@ export const checkSession = async (): Promise<boolean> => {
 
     return data.success === true;
   } catch (error: any) {
-    if (error.response?.status === 401) {
-      try {
-        await api.post("/auth/logout");
-      } catch {
-        // ничего
-      }
-    }
-
     return false;
   }
 };

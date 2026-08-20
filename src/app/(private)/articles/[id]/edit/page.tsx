@@ -1,5 +1,7 @@
+import { Metadata } from "next";
 import AddArticleForm from "@/components/AddArticleForm/AddArticleForm";
 import { getArticleById } from "@/lib/api/serverApi";
+import { getCurrentUserServer } from "@/app/(private)/profile/getCurrentUserServer";
 import { notFound } from 'next/navigation';
 import { AxiosError } from 'axios';
 
@@ -8,6 +10,11 @@ type Props = {
   params: Promise<{
     id: string;
   }>;
+};
+
+export const metadata: Metadata = {
+  title: "Edit article — Harmoniq",
+  description: "Edit your article on Harmoniq.",
 };
 
 export default async function EditArticlePage({
@@ -28,6 +35,16 @@ export default async function EditArticlePage({
     }
 
     throw error;
+  }
+
+  // FE-43: без цього анонім чи будь-який залогінений юзер бачив повністю
+  // заповнену форму редагування чужої статті (бекенд захищає лише сам сабміт)
+  const ownerId =
+    typeof article.ownerId === "string" ? article.ownerId : article.ownerId?._id;
+  const currentUser = await getCurrentUserServer();
+
+  if (!currentUser || currentUser.id !== ownerId) {
+    notFound();
   }
 
   return (

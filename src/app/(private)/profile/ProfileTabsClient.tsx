@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
+import { useProfileTab } from "./ProfileTabContext";
 import css from "./layout.module.css";
-
-type ProfileTab = "myArticles" | "savedArticles";
 
 type ProfileTabsClientProps = {
   children: ReactNode;
@@ -12,18 +11,12 @@ type ProfileTabsClientProps = {
   savedArticles: ReactNode;
 };
 
-// Тримає лише стан активного табу. Слоти @myArticles/@savedArticles вже
-// відрендерені сервером (можуть містити власні "use client" межі всередині —
-// це нормально, Server Component-батько може передавати такі готові дерева
-// в client-компонент як prop/children) — тут ми лише вирішуємо, який з них
-// показати. Перемикання табу розмонтовує неактивний слот, тож пагінація
-// в ньому завжди починається з початку при поверненні.
 export default function ProfileTabsClient({
   children,
   myArticles,
   savedArticles,
 }: ProfileTabsClientProps) {
-  const [activeTab, setActiveTab] = useState<ProfileTab>("myArticles");
+  const { activeTab, setActiveTab } = useProfileTab();
 
   return (
     <>

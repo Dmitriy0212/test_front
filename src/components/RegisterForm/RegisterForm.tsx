@@ -41,8 +41,8 @@ export const RegisterForm = () => {
               router.push("/photo");
             } catch (error: any) {
               toast.error(
-                error.response?.data?.error ||
-                  error.response?.data?.message ||
+                error.response?.data?.message ||
+                  error.response?.data?.error ||
                   "Registration failed",
               );
             } finally {

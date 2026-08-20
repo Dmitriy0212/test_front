@@ -1,0 +1,443 @@
+/* =========================================================
+   WRAPPER — центрує картку на сторінці
+========================================================= */
+
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    position: relative;
+
+    width: 392px;
+    height: 354px;
+
+    flex-shrink: 0;
+
+    box-sizing: border-box;
+
+    padding: 48px 32px;
+
+    background: #d1e0d8;
+    border-radius: 32px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.closeButton {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 24px;
+    height: 24px;
+
+    padding: 0;
+    border: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    z-index: 10;
+}
+
+.closeIcon {
+    width: 24px;
+    height: 24px;
+    display: block;
+    color: #7b8984;
+}
+
+.closeButton:hover .closeIcon {
+    color: #5a6b65;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.title {
+    width: 328px;
+    height: 44px;
+
+    margin: 0;
+    padding: 0;
+
+    color: #070721;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 32px;
+    line-height: 44px;
+    font-weight: 700;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form {
+    width: 328px;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 20px;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   CAMERA AREA
+========================================================= */
+
+.uploadArea {
+    position: relative;
+
+    width: 136px;
+    height: 136px;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   GREEN CAMERA CIRCLE
+========================================================= */
+
+.cameraCircle {
+    width: 136px;
+    height: 136px;
+
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 128px;
+
+    background: #649179;
+
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   CAMERA SVG
+========================================================= */
+
+.cameraIcon {
+    width: 71px;
+    height: 60px;
+
+    display: block;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+.fileInput {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    opacity: 0;
+
+    cursor: pointer;
+
+    z-index: 5;
+}
+
+/* =========================================================
+   PHOTO PREVIEW
+========================================================= */
+
+.previewWrapper {
+    position: relative;
+
+    width: 136px;
+    height: 136px;
+
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #649179;
+
+    flex-shrink: 0;
+}
+
+.previewImage {
+    object-fit: cover;
+}
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.submitButton {
+    width: 328px;
+    height: 38px;
+
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: row;
+    gap: 8px;
+
+    border: none;
+    border-radius: 64px;
+
+    background: #649179;
+
+    opacity: 0.3;
+
+    box-shadow:
+        0 0 0 6px rgba(78, 70, 180, 0.12),
+        0 0 0 2px #fff;
+
+    color: #ffffff;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    transition:
+        background 200ms ease,
+        opacity 200ms ease;
+}
+
+.submitButtonActive {
+    background: #649179;
+    opacity: 1;
+    box-shadow: none;
+}
+
+.submitButtonActive:hover {
+    background: #374f42;
+}
+
+.submitButton:disabled {
+    cursor: wait;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .card {
+        width: 522px;
+        height: 354px;
+
+        padding: 48px 32px;
+    }
+
+    .title {
+        width: 458px;
+        height: 44px;
+    }
+
+    .form {
+        width: 458px;
+    }
+
+    .submitButton {
+        width: 458px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+    .wrapper {
+        padding: 16px;
+        min-height: 100vh;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 360px;
+
+        height: 322px;
+
+        padding: 40px 16px;
+
+        border-radius: 28px;
+
+        gap: 16px;
+    }
+
+    .closeButton {
+        top: 16px;
+        right: 16px;
+
+        width: 20px;
+        height: 20px;
+    }
+
+    .closeIcon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .title {
+        width: 100%;
+        height: 32px;
+
+        font-size: 24px;
+        line-height: 32px;
+
+        white-space: normal;
+    }
+
+    .form {
+        width: 100%;
+
+        gap: 16px;
+    }
+
+    .uploadArea {
+        width: 120px;
+        height: 120px;
+    }
+
+    .cameraCircle {
+        width: 120px;
+        height: 120px;
+
+        padding: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cameraIcon {
+        width: 71px;
+        height: 60px;
+    }
+
+    .previewWrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .submitButton {
+        width: 100%;
+        height: 38px;
+
+        font-size: 12px;
+        line-height: 18px;
+    }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+    .wrapper {
+        padding: 12px;
+    }
+
+    .card {
+        max-width: 100%;
+        padding: 32px 16px;
+        height: auto;
+        min-height: 322px;
+    }
+
+    .title {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .cameraCircle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .cameraIcon {
+        width: 60px;
+        height: 50px;
+    }
+
+    .previewWrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .submitButton {
+        height: 34px;
+        font-size: 11px;
+    }
+}

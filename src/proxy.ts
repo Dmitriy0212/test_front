@@ -7,6 +7,9 @@ import { refreshSession } from "@/lib/api/serverApi";
 // cookie в /auth/register, тобто на цій сторінці юзер завжди авторизований
 const PRIVATE_ROUTES = ["/profile", "/articles/create", "/photo"];
 const PUBLIC_ONLY_ROUTES = ["/login", "/register"];
+// /articles/[id]/edit — id динамічний, тому startsWith з PRIVATE_ROUTES не годиться,
+// перевіряємо суфікс окремо (FE-43: без цього гейту сторінку відкриває будь-хто анонімно)
+const EDIT_ARTICLE_ROUTE = /^\/articles\/[^/]+\/edit\/?$/;
 
 function applySessionCookies(response: NextResponse, setCookieHeaders: string[]) {
   for (const cookieStr of setCookieHeaders) {
@@ -38,7 +41,9 @@ export async function proxy(request: NextRequest) {
   const refreshToken = cookieStore.get("refreshToken")?.value;
   const sessionId = cookieStore.get("sessionId")?.value;
 
-  const isPrivateRoute = PRIVATE_ROUTES.some((route) => pathname.startsWith(route));
+  const isPrivateRoute =
+    PRIVATE_ROUTES.some((route) => pathname.startsWith(route)) ||
+    EDIT_ARTICLE_ROUTE.test(pathname);
   const isPublicOnlyRoute = PUBLIC_ONLY_ROUTES.some((route) => pathname.startsWith(route));
 
   let isAuthenticated = Boolean(accessToken);
@@ -86,5 +91,12 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/articles/create", "/login", "/register", "/photo"],
+  matcher: [
+    "/profile/:path*",
+    "/articles/create",
+    "/articles/:id/edit",
+    "/login",
+    "/register",
+    "/photo",
+  ],
 };

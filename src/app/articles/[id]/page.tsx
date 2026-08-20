@@ -1,6 +1,10 @@
 import { randomInt } from "node:crypto";
+import { cache } from "react";
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { isAxiosError } from "axios";
 
 import {
   getArticleById,
@@ -18,6 +22,34 @@ type ArticlePageProps = {
     id: string;
   }>;
 };
+
+// cache(): без цього generateMetadata і сама сторінка робили б два окремих
+// запити до бекенду за той самий article — axios не дедуплюється Next.js
+// автоматично так, як голий fetch
+const getArticleOrNotFound = cache(async (id: string) => {
+  try {
+    return await getArticleById(id);
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) {
+      notFound();
+    }
+    throw error;
+  }
+});
+
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { id } = await params;
+  const article = await getArticleOrNotFound(id);
+
+  const title = `${article.title} — Harmoniq`;
+  const description = article.desc;
+
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+  };
+}
 
 type ArticleOwner = {
   _id: string;
@@ -60,7 +92,7 @@ export default async function ArticlePage({
 }: ArticlePageProps) {
   const { id } = await params;
 
-  const article = await getArticleById(id);
+  const article = await getArticleOrNotFound(id);
 
   const owner = article.ownerId as string | ArticleOwner | null;
 

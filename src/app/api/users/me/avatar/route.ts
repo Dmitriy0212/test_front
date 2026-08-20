@@ -9,3 +9,7 @@ export async function PATCH(request: NextRequest) {
 
   return proxyRequest(request, "/users/me/avatar");
 }
+
+export async function DELETE(request: NextRequest) {
+  return proxyRequest(request, "/users/me/avatar");
+}

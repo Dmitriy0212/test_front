@@ -1,8 +1,18 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import css from './Hero.module.css';
 
 export default function Hero() {
+ // Link href="#popular-articles" саме собою скролить лише коли хеш в URL
+ // реально змінюється — повторний клік по тому самому хешу браузер ігнорує.
+ // Скролимо явно щоразу, href лишаємо для fallback без JS.
+ const handleScrollToArticles = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  e.preventDefault();
+  document.getElementById('popular-articles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ };
+
  return (
   <section className={css.hero}>
    
@@ -54,7 +64,7 @@ export default function Hero() {
 </h1>
      
      <div className={css.buttons}>
-      <Link href="#popular-articles" className={css.btnPrimary}>
+      <Link href="#popular-articles" onClick={handleScrollToArticles} className={css.btnPrimary}>
        Go to Articles
       </Link>
       <Link href="/register" className={css.btnSecondary}>

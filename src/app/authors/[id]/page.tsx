@@ -49,19 +49,9 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
   const queryClient = getQueryClient();
 
-  // Гідруємо кеш під ключем ["me"] поточним відвідувачем (може бути null
-  // для гостя — це нормально, не помилка). Раніше AuthorArticlesSection
-  // брав currentUserId з Zustand-стору (useAuthStore), який заповнюється
-  // асинхронно, через що запит на збережені статті взагалі не робився
-  // одразу при вході на сторінку, і кнопка Save завжди показувала "не
-  // збережено" навіть для вже збережених статей. Детальніше в коментарі
-  // src/hooks/useCurrentUser.ts.
   const currentUser = await getCurrentUserServer();
   queryClient.setQueryData(["me"], currentUser);
 
-  // Якщо prefetch не вдався (наприклад, бекенд тимчасово недоступний), не валимо
-  // всю сторінку: клієнтський useInfiniteQuery в AuthorArticlesSection повторить
-  // запит сам і покаже toast з помилкою.
   try {
     await queryClient.prefetchInfiniteQuery({
       queryKey: ["authorArticles", id],
@@ -69,7 +59,6 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       initialPageParam: 1,
     });
   } catch {
-    // ігноруємо навмисно
   }
 
   return (

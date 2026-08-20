@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 
@@ -11,7 +12,6 @@ import EditArticleButton from "@/components/EditArticleButton/EditArticleButton"
 import Loader from "@/components/Loader/Loader";
 import Pagination from "@/components/Pagination/Pagination";
 import { getSavedArticles, getUserArticles } from "@/lib/api/clientApi";
-import type { Article } from "@/types/article";
 import { useCurrentUser } from "../useCurrentUserId";
 import css from "./default.module.css";
 
@@ -31,22 +31,16 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
 
-function getUniqueArticles(pages: { articles: Article[] }[]): Article[] {
-  const articlesById = new Map<string, Article>();
-  pages.forEach((page) => {
-    page.articles.forEach((article) => articlesById.set(article._id, article));
-  });
-  return [...articlesById.values()];
-}
-
 export default function MyArticlesTab() {
+  const router = useRouter();
   const { data: currentUser } = useCurrentUser();
   const currentUserId = currentUser?.id;
 
+  const [page, setPage] = useState(1);
   const [savedArticleIdsOverride, setSavedArticleIdsOverride] =
     useState<SavedArticleIdsOverride | null>(null);
-  const [scrollTargetId, setScrollTargetId] = useState<string | null>(null);
-  const firstNewArticleRef = useRef<HTMLLIElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const pendingScrollPageRef = useRef<number | null>(null);
 
   const { data: savedArticles } = useQuery({
     queryKey: ["saved-articles", currentUserId],
@@ -54,17 +48,14 @@ export default function MyArticlesTab() {
     enabled: Boolean(currentUserId),
   });
 
-  const { data, error, fetchNextPage, hasNextPage, isError, isFetchingNextPage, isPending } =
-    useInfiniteQuery({
-      queryKey: ["myArticles", currentUserId],
-      queryFn: ({ pageParam }) =>
-        getUserArticles(currentUserId as string, { page: pageParam, perPage: ARTICLES_PER_PAGE }),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.page + 1 : undefined),
-      enabled: Boolean(currentUserId),
-    });
+  const { data, error, isError, isFetching, isPending } = useQuery({
+    queryKey: ["myArticles", currentUserId, page],
+    queryFn: () => getUserArticles(currentUserId as string, { page, perPage: ARTICLES_PER_PAGE }),
+    enabled: Boolean(currentUserId),
+  });
 
-  const articles = useMemo(() => getUniqueArticles(data?.pages ?? []), [data?.pages]);
+  const articles = data?.articles ?? [];
+  const totalPages = data?.totalPages ?? 0;
   const authorNames = useMemo(
     () => (currentUser && currentUserId ? { [currentUserId]: currentUser.name } : {}),
     [currentUser, currentUserId],
@@ -80,47 +71,43 @@ export default function MyArticlesTab() {
     return savedArticles?.map((article) => article._id) ?? [];
   }, [currentUserId, savedArticleIdsOverride, savedArticles]);
 
+  // Scroll only once the requested page's data has actually landed (not while
+  // `isFetching`), otherwise scrollIntoView targets a scroll height computed
+  // from the still-old (usually longer) list and can undershoot after the
+  // shorter page renders in.
   useEffect(() => {
-    if (!scrollTargetId || !firstNewArticleRef.current) {
+    if (pendingScrollPageRef.current === null || pendingScrollPageRef.current !== page) {
       return;
     }
+
+    if (isFetching) {
+      return;
+    }
+
+    pendingScrollPageRef.current = null;
+
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    firstNewArticleRef.current.scrollIntoView({
+    sectionRef.current?.scrollIntoView({
       behavior: prefersReducedMotion ? "auto" : "smooth",
       block: "start",
     });
-    setScrollTargetId(null);
-  }, [scrollTargetId]);
+  }, [page, isFetching]);
 
-  const handleLoadMore = async () => {
-    const previousArticleIds = new Set(articles.map((article) => article._id));
-    const result = await fetchNextPage();
-
-    if (result.isError) {
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage === page) {
       return;
     }
 
-    const updatedArticles = getUniqueArticles(result.data?.pages ?? []);
-    const firstNewArticle = updatedArticles.find((article) => !previousArticleIds.has(article._id));
-
-    if (firstNewArticle) {
-      setScrollTargetId(firstNewArticle._id);
-    }
+    pendingScrollPageRef.current = nextPage;
+    setPage(nextPage);
   };
 
   const handleGuestSaveAttempt = () => {
     toast.error("Please log in to save articles");
   };
 
-  // На "My Articles" замінюємо стандартну bookmark-кнопку на EditArticleButton —
-  // юзер не має "зберігати в закладки" власні статті, натомість редагує їх.
-  // Заглушка: сторінки/форми редагування статті ще не існує в жодній гілці
-  // (не наша зона відповідальності і не входить у поточний фідбек тімліда
-  // по /profile), тож onClick поки що просто повідомляє про майбутню фічу,
-  // а не веде на неперевірений/неіснуючий маршрут. Замінити на router.push
-  // до реального шляху, коли сторінка редагування буде готова й змержена.
-  const handleEdit = () => {
-    toast("Editing articles is coming soon");
+  const handleEdit = (articleId: string) => {
+    router.push(`/articles/${articleId}/edit`);
   };
 
   const handleSavedArticlesChange = (articleIds: string[]) => {
@@ -153,28 +140,22 @@ export default function MyArticlesTab() {
   }
 
   return (
-    <div className={css.section}>
+    <div className={css.section} ref={sectionRef} aria-busy={isFetching}>
       <ArticlesList
         articles={articles}
         authorNames={authorNames}
         savedArticleIds={savedArticleIds}
         onGuestClick={handleGuestSaveAttempt}
         onSavedArticlesChange={handleSavedArticlesChange}
-        scrollTargetId={scrollTargetId}
-        scrollTargetRef={firstNewArticleRef}
         renderAction={(article) => (
           <EditArticleButton
             articleTitle={article.title}
-            onClick={handleEdit}
+            onClick={() => handleEdit(article._id)}
           />
         )}
       />
 
-      <Pagination
-        hasMore={Boolean(hasNextPage)}
-        isLoading={isFetchingNextPage}
-        onLoadMore={handleLoadMore}
-      />
+      <Pagination pageCount={totalPages} currentPage={page} onPageChange={handlePageChange} />
     </div>
   );
 }

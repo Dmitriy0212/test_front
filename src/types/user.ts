@@ -20,3 +20,10 @@ export type GetMeResponse = {
     user: AuthUser;
   };
 };
+export type GetUsers = {
+  page: number;
+  perPage: number;
+  totalItems: number;
+  totalPages: number;
+  users: User[];
+};

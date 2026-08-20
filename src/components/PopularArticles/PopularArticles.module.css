@@ -1,5 +1,7 @@
 .section {
-  scroll-margin-top: 24px;
+  /* sticky-хедер ~73px висотою (Header.module.css) на всіх брейкпоінтах +
+     трохи відступу, інакше скрол ховає заголовок секції під хедером */
+  scroll-margin-top: 96px;
   color: var(--color-text);
   background-color: var(--color-bg);
 }

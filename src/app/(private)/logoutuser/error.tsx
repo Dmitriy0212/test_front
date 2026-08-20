@@ -1,11 +1,19 @@
-'use client';
+"use client";
+
+import css from "./error.module.css";
 
 type Props = {
-  error: Error;
+  error: Error & { digest?: string };
+  retry: () => void;
 };
 
-const Error = ({ error }: Props) => {
-  return <p>Could not fetch note details. {error.message}</p>;
-};
-
-export default Error;
+export default function LogoutUserError({ retry }: Props) {
+  return (
+    <div className={css.wrapper}>
+      <p className={css.message}>Something went wrong while logging out.</p>
+      <button type="button" className={css.button} onClick={() => retry()}>
+        Try again
+      </button>
+    </div>
+  );
+}
